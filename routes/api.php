@@ -22,10 +22,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class,'login']);
 Route::post('register', [AuthController::class,'register']);
 Route::apiResource('user', UserController::class);
-Route::apiResource('bundle', UserController::class);
+Route::apiResource('bundle', BundleController::class);
 Route::apiResource('nft', NFTController::class);
 Route::apiResource('user-bundle', UserBundleController::class);
-Route::apiResource('user-bundle', BundleController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
