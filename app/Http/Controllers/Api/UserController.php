@@ -66,7 +66,7 @@ class UserController extends Controller
         if(!$user->update($request->validated()))
         { return (new Response)->error(400);}
         if($request->has('bundle_id'))
-        { $user->bundle()->sync([$user->bundle()->get()->pluck('id') => ['status' => false], $request->input('bundle_id')]); }
+        { $user->bundle()->sync([$user->bundle()->get()->pluck('id')[0] => ['status' => false], $request->input('bundle_id')]); }
         return (new Response)->success(UserResource::make($user));
     }
 

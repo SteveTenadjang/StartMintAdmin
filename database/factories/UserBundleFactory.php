@@ -20,8 +20,8 @@ class UserBundleFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => fake()->randomElement(User::query()->pluck('id')),
-            'bundle_id' => fake()->randomElement(Bundle::query()->pluck('id')),
+            'user_id' => fake()->unique()->randomElement(User::query()->pluck('id')),
+            'bundle_id' => fake()->unique()->randomElement(Bundle::query()->pluck('id')),
         ];
     }
 }

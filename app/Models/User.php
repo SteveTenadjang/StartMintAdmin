@@ -47,15 +47,15 @@ class User extends Authenticatable
     public function canCreatedToday(): bool
     {
         return $this->nfts()
-            ->whereDay('created_at', date("d"))->count() <= 1;
+            ->whereDay('created_at', date("d"))->count() < 1;
     }
     public function canCreatedThisMonth(): bool
     {
         return $this->nfts()
             ->whereMonth('created_at', date("m"))
-            ->count() <= $this->bundle()->get()->pluck('limit');
+            ->count() < $this->bundle()->get()->pluck('limit')[0];
     }
 
     public function isFreeAccount(): bool
-    { return (int)$this->bundle()->get()->pluck('id') === 1; }
+    { return $this->bundle()->get()->pluck('id')[0] === 1; }
 }
