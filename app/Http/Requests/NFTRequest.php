@@ -24,28 +24,30 @@ class NFTRequest extends FormRequest
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             return [
                 "author_name" => ['sometimes','string'],
+                "contract_address" => ['sometimes','string'],
+                "wallet" => ['sometimes','string'],
+                "token" => ['sometimes','string'],
                 "media_link" => ['sometimes','string'],
                 "media_type" => ['sometimes','string'],
+                "media_title" => ['sometimes','string'],
+                "nft_quantity" => ['sometimes','integer','min:1','max:25'],
                 "price" => ['sometimes','decimal'],
                 "description" => ['sometimes','string'],
                 "blockchain_type" => ['sometimes','string'],
-                "title" => ['sometimes','string'],
-                "created_by" => ['sometimes','integer','exists:users,id'],
-                "max_quantity" => ['sometimes','integer','min:1'],
-                "limit" => ['sometimes','integer','min:1'],
             ];
         }
         return [
             "author_name" => ['required','string'],
+            "contract_address" => ['required','string'],
+            "wallet" => ['required','string'],
+            "token" => ['required','string'],
             "media_link" => ['required','string'],
             "media_type" => ['required','string'],
-            "title" => ['required','string'],
+            "media_title" => ['required','string'],
+            "nft_quantity" => ['required','integer','min:1',' max:25'],
             "description" => ['string'],
             "blockchain_type" => ['required','string'],
-            "created_by" => ['required','integer','exists:users,id'],
-            "price" => ['required','decimal'],
-            "max_quantity" => ['required','integer','min:1'],
-            "limit" => ['required','integer','min:1'],
+            "price" => ['required','numeric'],
         ];
     }
 }

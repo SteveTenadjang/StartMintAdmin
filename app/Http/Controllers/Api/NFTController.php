@@ -27,10 +27,17 @@ class NFTController extends Controller
      */
     public function store(NFTRequest $request): array
     {
-        $user = new NFT($request->validated());
-        return !$user->save()
+        $nft = new NFT($request->validated());
+        $nft['created_by'] = auth()->id();
+        if(auth()->user()?->isFreeAccount() && !auth()->user()?->canCreatedToday()){
+            return (new Response)->error(401,$nft, "Can't create more than 1 NFT in 24H");
+        }
+        if(!auth()->user()?->isFreeAccount() && !auth()->user()?->canCreatedThisMonth()){
+            return (new Response)->error(401,$nft, "already exceeded monthly(30 days) creation limit");
+        }
+        return !$nft->save()
             ? (new Response)->error()
-            : (new Response)->created(NFTResource::make($user));
+            : (new Response)->created(NFTResource::make($nft));
     }
 
     /**
@@ -41,10 +48,10 @@ class NFTController extends Controller
      */
     public function show(int $id): array
     {
-        $user = NFT::query()->find($id);
-        return !$user
+        $nft = NFT::query()->find($id);
+        return !$nft
             ? (new Response)->idNotFound()
-            : (new Response)->success(NFTResource::make($user));
+            : (new Response)->success(NFTResource::make($nft));
     }
 
     /**
@@ -57,13 +64,13 @@ class NFTController extends Controller
      */
     public function update(NFTRequest $request, int $id): array
     {
-        $user = NFT::query()->find($id);
-        if(!$user)
+        $nft = NFT::query()->find($id);
+        if(!$nft)
         { return (new Response)->idNotFound(); }
 
-        return (!$user->update($request->validated()))
+        return (!$nft->update($request->validated()))
             ? (new Response)->error(400)
-            : (new Response)->success(NFTResource::make($user));
+            : (new Response)->success(NFTResource::make($nft));
     }
 
     /**
@@ -74,12 +81,12 @@ class NFTController extends Controller
      */
     public function destroy(int $id): array
     {
-        $user = NFT::query()->find($id);
-        if(!$user)
+        $nft = NFT::query()->find($id);
+        if(!$nft)
         { return (new Response)->idNotFound(); }
 
-        return (!$user->delete())
-            ? (new Response)->error(400,$user)
-            : (new Response)->success(NFTResource::make($user));
+        return (!$nft->delete())
+            ? (new Response)->error(400,$nft)
+            : (new Response)->success(NFTResource::make($nft));
     }
 }

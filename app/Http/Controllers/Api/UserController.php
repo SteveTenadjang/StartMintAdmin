@@ -29,9 +29,10 @@ class UserController extends Controller
     public function store(UserRequest $request): array
     {
         $user = new User($request->validated());
-        return !$user->save()
-            ? (new Response)->error()
-            : (new Response)->created(UserResource::make($user));
+        if(!$user->save())
+        { return (new Response)->error(); }
+        $user->bundle()->attach($request->input('bundle_id')?:1);
+        return (new Response)->created(UserResource::make($user));
     }
 
     /**
@@ -62,9 +63,11 @@ class UserController extends Controller
         if(!$user)
         { return (new Response)->idNotFound(); }
 
-        return (!$user->update($request->validated()))
-            ? (new Response)->error(400)
-            : (new Response)->success(UserResource::make($user));
+        if(!$user->update($request->validated()))
+        { return (new Response)->error(400);}
+        if($request->has('bundle_id'))
+        { $user->bundle()->sync([$user->bundle()->get()->pluck('id') => ['status' => false], $request->input('bundle_id')]); }
+        return (new Response)->success(UserResource::make($user));
     }
 
     /**

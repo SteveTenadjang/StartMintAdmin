@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('n_f_t_s', static function (Blueprint $table) {
             $table->id();
             $table->string('author_name');
+            $table->string('contract_address');
+            $table->string('wallet');
+            $table->string('token');
             $table->string('media_link');
             $table->string('media_type');
-            $table->string('title');
-            $table->integer('max_quantity');
+            $table->string('media_title');
+            $table->integer('nft_quantity');
             $table->double('price');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('blockchain_type');
             $table->foreignId('created_by')->nullable();
             $table->timestamps();
@@ -37,3 +40,8 @@ return new class extends Migration
     public function down(): void
     { Schema::dropIfExists('n_f_t_s'); }
 };
+/*
+ * Todo limit nft_quantity to 25
+    limit nft creation per day for free accounts
+    limit nft creation per month for paid accounts
+ */

@@ -27,6 +27,7 @@ class UserRequest extends FormRequest
                 "email" => ['sometimes','email'],
                 "password" => ['sometimes','string','confirmed','min:6'],
                 "wallet_id" => ['sometimes','string'],
+                'bundle_id' => ['sometimes','integer']
             ];
         }
         return [
@@ -34,6 +35,7 @@ class UserRequest extends FormRequest
             "email" => ['required','email'],
             "password" => ['required','string','confirmed','min:6'],
             "wallet_id" => ['required','string'],
+            'bundle_id' => ['integer']
         ];
     }
 }

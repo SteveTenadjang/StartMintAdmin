@@ -11,7 +11,7 @@ class UserBundle extends Pivot
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'bundle_id'];
+    protected $fillable = ['user_id', 'bundle_id','status'];
 
     public function user(): BelongsTo
     { return $this->belongsTo(User::class); }

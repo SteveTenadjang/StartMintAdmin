@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\BundleController;
 use App\Http\Controllers\Api\NFTController;
 use App\Http\Controllers\Api\UserBundleController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,11 +20,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class,'login']);
 Route::post('register', [AuthController::class,'register']);
-Route::apiResource('user', UserController::class);
-Route::apiResource('bundle', BundleController::class);
-Route::apiResource('nft', NFTController::class);
-Route::apiResource('user-bundle', UserBundleController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'auth:sanctum'], static function () {
+    Route::apiResource('user', UserController::class);
+    Route::apiResource('bundle', BundleController::class);
+    Route::apiResource('nft', NFTController::class);
+    Route::apiResource('user-bundle', UserBundleController::class);
 });

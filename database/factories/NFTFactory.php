@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\NFT;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,14 +20,17 @@ class NFTFactory extends Factory
     {
         return [
             'author_name' => fake()->userName,
+            'contract_address' => fake()->address,
+            'wallet' => fake()->unique()->uuid,
+            'token' => fake()->unique()->windowsPlatformToken,
             'media_link' => fake()->localIpv4,
-            'media_type' => fake()->mimeType(),
-            'title' => fake()->title,
-            'max_quantity' => fake()->randomDigitNotNull(),
+            'media_type' => fake()->word(),
+            'media_title' => fake()->word,
+            'nft_quantity' => fake()->randomDigitNotZero(),
             'price' => fake()->randomFloat(),
-            'description' => fake()->words(5),
+            'description' => fake()->sentence(4),
             'blockchain_type' => fake()->word,
-            'created_by' => 1,
+            'created_by' => fake()->randomElement(User::query()->pluck('id')),
         ];
     }
 }

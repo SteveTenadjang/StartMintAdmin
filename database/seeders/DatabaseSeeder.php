@@ -27,11 +27,12 @@ class DatabaseSeeder extends Seeder
          NFT::factory(10)->create();
          UserBundle::factory(10)->create();
 
-         User::factory()->create([
+         $tenas = User::factory()->create([
              'name' => 'TENAS STEVE',
              'email' => 'tenas@gmail.com',
              'password' => Hash::make('password'),
-             'wallet_id' => random_bytes(5),
+             'wallet' => uuid_create(),
          ]);
+         $tenas->bundle()->attach(1);
     }
 }
