@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BundleController;
-use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\NFTController;
 use App\Http\Controllers\Api\UserBundleController;
 use App\Http\Controllers\Api\UserController;
@@ -24,11 +23,11 @@ Route::post('register', [AuthController::class,'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::apiResource('user', UserController::class);
-    Route::group(['middleware' => 'verified'], static function () {
-        Route::apiResource('bundle', BundleController::class);
-        Route::apiResource('nft', NFTController::class);
-        Route::apiResource('user-bundle', UserBundleController::class);
-    });
-    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->name('verification.notice');
-    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
+    Route::apiResource('bundle', BundleController::class);
+    Route::apiResource('nft', NFTController::class);
+    Route::apiResource('user-bundle', UserBundleController::class);
+//    Route::group(['middleware' => 'verified'], static function () {
+//    });
+//    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->name('verification.notice');
+//    Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 });
