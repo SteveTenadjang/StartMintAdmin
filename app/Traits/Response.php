@@ -27,6 +27,16 @@ class Response{
         ];
     }
 
+    public function executed(string $message): array
+    {
+        Log::channel()->info(Route::getCurrentRoute()?->getActionName()." method success");
+        return [
+            'status' => 200,
+            'success' => true,
+            'message' => $message
+        ];
+    }
+
     public function created($data): array
     {
         Log::channel()->info(Route::getCurrentRoute()?->getActionName()." creation success");

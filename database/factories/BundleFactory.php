@@ -20,6 +20,7 @@ class BundleFactory extends Factory
         return [
             'name' => fake()->unique()->name,
             'limit' => fake()->randomElement([5,10,15]),
+            'duration' => fake()->randomDigitNotZero(),
         ];
     }
 }

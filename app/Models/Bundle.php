@@ -13,7 +13,7 @@ class Bundle extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['name','limit'];
+    protected $fillable = ['name','limit','duration'];
 
     public function users(): BelongsToMany
     { return $this->belongsToMany(User::class,'user_bundle'); }

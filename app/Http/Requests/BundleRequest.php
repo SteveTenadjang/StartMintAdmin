@@ -25,11 +25,13 @@ class BundleRequest extends FormRequest
             return [
                 "name" => ['sometimes','string'],
                 "limit" => ['sometimes','integer','min:1'],
+                "duration" => ['sometimes','integer','min:1'],
             ];
         }
         return [
             "name" => ['required','string'],
             "limit" => ['required','integer','min:1'],
+            "duration" => ['required','integer','min:1'],
         ];
     }
 }
