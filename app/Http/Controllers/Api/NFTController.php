@@ -6,6 +6,9 @@ use App\Http\Requests\NFTRequest;
 use App\Http\Resources\NFTResource;
 use App\Models\NFT;
 use App\Traits\Response;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class NFTController extends Controller
@@ -31,6 +34,7 @@ class NFTController extends Controller
         $nft['created_by'] = auth()->id();
         if(!auth()->user()?->canCreate())
         { return (new Response)->error(401,$nft, "already exceeded creation limit"); }
+        $nft = $this->fileManager($request, $nft);
         return !$nft->save()
             ? (new Response)->error()
             : (new Response)->created(NFTResource::make($nft));
@@ -63,7 +67,7 @@ class NFTController extends Controller
         $nft = NFT::query()->find($id);
         if(!$nft)
         { return (new Response)->idNotFound(); }
-
+        $nft = $this->fileManager($request, $nft);
         return (!$nft->update($request->validated()))
             ? (new Response)->error(400)
             : (new Response)->success(NFTResource::make($nft));
@@ -84,5 +88,26 @@ class NFTController extends Controller
         return (!$nft->delete())
             ? (new Response)->error(400,$nft)
             : (new Response)->success(NFTResource::make($nft));
+    }
+
+    /**
+     * @param NFTRequest $request
+     * @param Model|Collection|Builder|array $nft
+     * @return array|Builder|Collection|Model
+     */
+    private function fileManager(NFTRequest $request, Model|Collection|Builder|array $nft): array|Builder|Collection|Model
+    {
+        if ($request->hasFile('file') && $request->file('file')?->isValid()) {
+            $file = $request->file('file');
+            $extensions = ['mp4', 'mov', 'gif', 'jpg', 'png', 'pdf', 'ai', 'eps', 'mp3', 'wav', 'aiff'];
+            $extension = $file->getClientOriginalExtension();
+            $name = $file->getClientOriginalName();
+            if (in_array($extension, $extensions)) {
+                $nft['media_link'] = $file->storeAs('files/' . time(), $name);
+                $nft['media_type'] = $extension;
+                $nft['media_title'] = $name;
+            }
+        }
+        return $nft;
     }
 }

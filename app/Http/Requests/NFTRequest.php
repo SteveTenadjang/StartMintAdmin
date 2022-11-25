@@ -27,13 +27,11 @@ class NFTRequest extends FormRequest
                 "contract_address" => ['sometimes','string'],
                 "wallet" => ['sometimes','string'],
                 "token" => ['sometimes','string'],
-                "media_link" => ['sometimes','string'],
-                "media_type" => ['sometimes','string'],
-                "media_title" => ['sometimes','string'],
                 "nft_quantity" => ['sometimes','integer','min:1','max:25'],
                 "price" => ['sometimes','numeric'],
                 "description" => ['sometimes','string'],
                 "blockchain_type" => ['sometimes','string'],
+                "file" => ['sometimes','mimes:mp4,mov,gif,jpg,png,pdf,ai,eps,mp3,wav,aiff','max:5120']
             ];
         }
         return [
@@ -41,13 +39,11 @@ class NFTRequest extends FormRequest
             "contract_address" => ['required','string'],
             "wallet" => ['required','string'],
             "token" => ['required','string'],
-            "media_link" => ['required','string'],
-            "media_type" => ['required','string'],
-            "media_title" => ['required','string'],
             "nft_quantity" => ['required','integer','min:1',' max:25'],
             "description" => ['string'],
             "blockchain_type" => ['required','string'],
             "price" => ['required','numeric'],
+            "file" => ['required','mimes:mp4,mov,gif,jpg,png,pdf,ai,eps,mp3,wav,aiff','max:5120']
         ];
     }
 }
