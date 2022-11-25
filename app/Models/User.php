@@ -53,7 +53,7 @@ class User extends Authenticatable
     public function canCreate(): bool
     {
         $bundle = $this->bundle()->first();
-        $date = Carbon::now()->addDays($bundle['duration']);
+        $date = Carbon::now()->subDays($bundle['duration']);
         return $this->nfts()
             ->whereBetween('created_at',[$date,date("d")])
             ->count() < $bundle['limit'];
