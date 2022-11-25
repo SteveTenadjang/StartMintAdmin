@@ -44,7 +44,7 @@ class UserController extends Controller
     public function show(int $id): array
     {
         $user = User::query()->find($id);
-        return !$user
+        return (!$user)
             ? (new Response)->idNotFound()
             : (new Response)->success(UserResource::make($user));
     }

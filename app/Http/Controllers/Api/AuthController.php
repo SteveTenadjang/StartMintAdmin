@@ -24,6 +24,7 @@ class AuthController extends Controller
 		$user['password'] = Hash::make($request['password']);
         $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
+        $user->bundle()->attach($request->input('bundle_id')?:1);
         return (new Response)->auth(UserResource::make($user),$token);
     }
 

@@ -29,7 +29,7 @@ class NFTController extends Controller
     {
         $nft = new NFT($request->validated());
         $nft['created_by'] = auth()->id();
-        if(auth()->user()?->canCreate())
+        if(!auth()->user()?->canCreate())
         { return (new Response)->error(401,$nft, "already exceeded creation limit"); }
         return !$nft->save()
             ? (new Response)->error()

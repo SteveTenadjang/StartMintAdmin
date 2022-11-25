@@ -31,7 +31,7 @@ class NFTRequest extends FormRequest
                 "media_type" => ['sometimes','string'],
                 "media_title" => ['sometimes','string'],
                 "nft_quantity" => ['sometimes','integer','min:1','max:25'],
-                "price" => ['sometimes','decimal'],
+                "price" => ['sometimes','numeric'],
                 "description" => ['sometimes','string'],
                 "blockchain_type" => ['sometimes','string'],
             ];
