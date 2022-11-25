@@ -3,7 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -50,11 +50,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->nfts()
             ->whereDay('created_at', date("d"))->count() < 1;
     }
-    public function canCreatedThisMonth(): bool
+    public function canCreate(): bool
     {
+        $bundle = $this->bundle()->get();
+        if($bundle['duration'] === 1){
+            return $this->nfts()->whereDay('created_at', date("d"))->count() < 1;
+        }
+        $date = Carbon::now()->addDays($bundle['duration']);
         return $this->nfts()
-            ->whereMonth('created_at', date("m"))
-            ->count() < $this->bundle()->get()->pluck('limit')[0];
+            ->whereBetween('created_at',[$date,date("m")])
+            ->count() < $bundle['limit'];
     }
 
     public function isFreeAccount(): bool

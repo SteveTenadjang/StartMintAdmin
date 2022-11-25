@@ -29,12 +29,8 @@ class NFTController extends Controller
     {
         $nft = new NFT($request->validated());
         $nft['created_by'] = auth()->id();
-        if(auth()->user()?->isFreeAccount() && !auth()->user()?->canCreatedToday()){
-            return (new Response)->error(401,$nft, "Can't create more than 1 NFT in 24H");
-        }
-        if(!auth()->user()?->isFreeAccount() && !auth()->user()?->canCreatedThisMonth()){
-            return (new Response)->error(401,$nft, "already exceeded monthly(30 days) creation limit");
-        }
+        if(auth()->user()?->canCreate())
+        { return (new Response)->error(401,$nft, "already exceeded creation limit"); }
         return !$nft->save()
             ? (new Response)->error()
             : (new Response)->created(NFTResource::make($nft));

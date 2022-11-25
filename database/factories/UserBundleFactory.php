@@ -21,7 +21,7 @@ class UserBundleFactory extends Factory
     {
         return [
             'user_id' => fake()->unique()->randomElement(User::query()->pluck('id')),
-            'bundle_id' => fake()->unique()->randomElement(Bundle::query()->pluck('id')),
+            'bundle_id' => fake()->randomElement(Bundle::query()->pluck('id')),
         ];
     }
 }

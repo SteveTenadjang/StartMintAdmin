@@ -14,7 +14,7 @@ class BundleSeeder extends Seeder
      */
     public function run(): void
     {
-        Bundle::query()->create(['name'=> 'classic', 'limit' => 5]);
-        Bundle::query()->create(['name'=> 'premium', 'limit' => 15]);
+        Bundle::query()->create(['name'=> 'classic', 'limit' => 5,'duration'=> 5 ]);
+        Bundle::query()->create(['name'=> 'premium', 'limit' => 15,'duration'=> 30 ]);
     }
 }
