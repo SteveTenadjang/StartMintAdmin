@@ -38,15 +38,13 @@ class UserController extends Controller
     /**
      * Display the specified resource and it's relations.
      *
-     * @param int $id
      * @return array
      */
-    public function show(int $id): array
+    public function show(): array
     {
-        $user = User::query()->find($id);
-        return (!$user)
+        return (!auth()->user())
             ? (new Response)->idNotFound()
-            : (new Response)->success(UserResource::make($user));
+            : (new Response)->success(UserResource::make(auth()->user()));
     }
 
     /**
@@ -54,19 +52,19 @@ class UserController extends Controller
      * EC = User Collection name for Spatie media
      *
      * @param UserRequest $request
-     * @param int $id
      * @return array
      */
-    public function update(UserRequest $request, int $id): array
+    public function update(UserRequest $request): array
     {
-        $user = User::query()->find($id);
+        $user = auth()->user();
         if(!$user)
         { return (new Response)->idNotFound(); }
 
         if(!$user->update($request->validated()))
         { return (new Response)->error(400);}
+
         if($request->has('bundle_id'))
-        { $user->bundle()->sync([$user->bundle()->get()->pluck('id')[0] => ['status' => false], $request->input('bundle_id')]); }
+        { $user->bundle()->sync([$user->bundle()->first()['id'] => ['status' => false], $request->input('bundle_id')]); }
         return (new Response)->success(UserResource::make($user));
     }
 

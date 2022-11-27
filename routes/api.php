@@ -22,10 +22,15 @@ Route::post('login', [AuthController::class,'login']);
 Route::post('register', [AuthController::class,'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], static function () {
-    Route::apiResource('user', UserController::class);
     Route::apiResource('bundle', BundleController::class);
     Route::apiResource('nft', NFTController::class);
     Route::apiResource('user-bundle', UserBundleController::class);
+    Route::get('user',[UserController::class,'show']);
+    Route::post('user',[UserController::class,'store']);
+    Route::put('user',[UserController::class,'update']);
+    Route::delete('user',[UserController::class,'delete']);
+    Route::get('users',[UserController::class,'index']);
+//    Route::apiResource('user', UserController::class)->only('index','store','delete');
 //    Route::group(['middleware' => 'verified'], static function () {
 //    });
 //    Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->name('verification.notice');

@@ -23,7 +23,7 @@ class UserRequest extends FormRequest
     {
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             return [
-                "name" => ['sometimes','string','unique:users','name,'.$this['id']],
+                "name" => ['sometimes','string','unique:users'],
                 "email" => ['sometimes','email','unique:users','email,'.$this['id']],
                 "password" => ['sometimes','string','confirmed','min:6'],
                 "wallet" => ['sometimes','string'],
