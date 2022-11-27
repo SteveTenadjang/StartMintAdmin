@@ -39,10 +39,10 @@ class NFTRequest extends FormRequest
             "contract_address" => ['required','string'],
             "wallet" => ['required','string'],
             "token" => ['required','string'],
-            "nft_quantity" => ['required','integer','min:1',' max:25'],
+            "nft_quantity" => ['integer','min:1',' max:25'],
             "description" => ['string'],
             "blockchain_type" => ['required','string'],
-            "price" => ['required','numeric'],
+            "price" => ['numeric'],
             "file" => ['required','mimes:mp4,mov,gif,jpg,png,pdf,ai,eps,mp3,wav,aiff','max:5120']
         ];
     }
