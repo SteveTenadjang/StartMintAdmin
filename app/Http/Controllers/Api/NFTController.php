@@ -101,11 +101,9 @@ class NFTController extends Controller
             $file = $request->file('file');
             $extensions = ['mp4', 'mov', 'gif', 'jpg', 'png', 'pdf', 'ai', 'eps', 'mp3', 'wav', 'aiff'];
             $extension = $file->getClientOriginalExtension();
-            $name = $file->getClientOriginalName();
             if (in_array($extension, $extensions)) {
                 $nft['media_link'] = $file->storeAs('files/' . time(), $name);
                 $nft['media_type'] = $extension;
-                $nft['media_title'] = $name;
             }
         }
         return $nft;

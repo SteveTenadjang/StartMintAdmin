@@ -31,6 +31,7 @@ class NFTRequest extends FormRequest
                 "price" => ['sometimes','numeric'],
                 "description" => ['sometimes','string'],
                 "blockchain_type" => ['sometimes','string'],
+                "media_title" => ['sometimes','string'],
                 "file" => ['sometimes','mimes:mp4,mov,gif,jpg,png,pdf,ai,eps,mp3,wav,aiff','max:5120']
             ];
         }
@@ -42,6 +43,7 @@ class NFTRequest extends FormRequest
             "nft_quantity" => ['integer','min:1',' max:25'],
             "description" => ['string'],
             "blockchain_type" => ['required','string'],
+            "media_title" => ['required','string'],
             "price" => ['numeric'],
             "file" => ['required','mimes:mp4,mov,gif,jpg,png,pdf,ai,eps,mp3,wav,aiff','max:5120']
         ];
