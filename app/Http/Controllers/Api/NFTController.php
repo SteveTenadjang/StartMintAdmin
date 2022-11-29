@@ -20,7 +20,7 @@ class NFTController extends Controller
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
-    {  return response()->success((NFTResource::collection(NFT::all()))); }
+    {  return response()->success((NFTResource::collection($request->user()->NFTs()->get()))); }
 
     /**
      * Store a newly created resource in storage.
