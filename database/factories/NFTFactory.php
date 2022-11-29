@@ -22,7 +22,7 @@ class NFTFactory extends Factory
             'author_name' => fake()->userName,
             'contract_address' => fake()->address,
             'wallet' => fake()->unique()->uuid,
-            'token' => fake()->unique()->windowsPlatformToken,
+            'token' => fake()->unique()->uuid,
             'media_link' => fake()->localIpv4,
             'media_type' => fake()->word(),
             'media_title' => fake()->word,

@@ -32,12 +32,12 @@ class AuthController extends Controller
     {
         $user = User::query()->where('email', $request->input('email'))->first();
         if(!$user)
-        { return response()->error(statusCode: 404, message: 'Unknown Email'); }
+        { return response()->error(message: 'Unknown Email'); }
 
         if (!Auth::attempt($request->only('email', 'password')))
         {
             Log::channel('auth-Login')->info("Login failed");
-            return response()->error(statusCode: 401, message: 'Login failed');
+            return response()->error(message: 'Login failed');
         }
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->auth(UserResource::make($user),$token);
@@ -54,7 +54,7 @@ class AuthController extends Controller
     {
         $user = User::query()->where('email', $request->input('email'))->first();
         if(!$user)
-        { return response()->error(statusCode: 404, message: 'Unknown Email'); }
+        { return response()->error(message: 'Unknown Email'); }
         return response()->success($user);
     }
 }

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Traits\Response;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,7 +17,7 @@ class UserController extends Controller
      * @return array
      */
     public function index(Request $request): array
-    {  return (new Response)->success(UserResource::collection(User::all())); }
+    {  return response()->success(UserResource::collection(User::all())); }
 
     /**
      * Store a newly created resource in storage.
@@ -30,9 +29,9 @@ class UserController extends Controller
     {
         $user = new User($request->validated());
         if(!$user->save())
-        { return (new Response)->error(); }
+        { return response()->error(); }
         $user->bundle()->attach($request->input('bundle_id')?:1);
-        return (new Response)->created(UserResource::make($user));
+        return response()->created(UserResource::make($user));
     }
 
     /**
@@ -45,8 +44,8 @@ class UserController extends Controller
     {
         $user = User::query()->find($id);
         return (!$user)
-            ? (new Response)->idNotFound()
-            : (new Response)->success(UserResource::make($user));
+            ? response()->idNotFound()
+            : response()->success(UserResource::make($user));
     }
 
     /**
@@ -61,13 +60,13 @@ class UserController extends Controller
     {
         $user = User::query()->find($id);
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         if(!$user->update($request->validated()))
-        { return (new Response)->error(400);}
+        { return response()->error();}
         if($request->has('bundle_id'))
         { $user->bundle()->sync([$user->bundle()->get()->pluck('id')[0] => ['status' => false], $request->input('bundle_id')]); }
-        return (new Response)->success(UserResource::make($user));
+        return response()->success(UserResource::make($user));
     }
 
     /**
@@ -80,10 +79,10 @@ class UserController extends Controller
     {
         $user = User::query()->find($id);
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         return (!$user->delete())
-            ? (new Response)->error(400,$user)
-            : (new Response)->success(UserResource::make($user));
+            ? response()->error(400,$user)
+            : response()->success(UserResource::make($user));
     }
 }

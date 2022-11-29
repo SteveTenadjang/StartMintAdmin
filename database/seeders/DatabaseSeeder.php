@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\NFT;
+use App\Models\User;
+use App\Models\UserBundle;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 
 class DatabaseSeeder extends Seeder
@@ -13,14 +16,21 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('users')->insert([
-            'username' => 'admin',
-            'firstname' => 'Admin',
-            'lastname' => 'Admin',
-            'email' => 'admin@argon.com',
-            'password' => bcrypt('secret')
+        $this->call([
+            BundleSeeder::class
         ]);
+        $tenas = User::query()->create([
+            'name' => 'tenas',
+            'email' => 'tenas@gmail.com',
+            'password' => Hash::make('password'),
+            'wallet' => uuid_create()
+        ]);
+        $tenas->bundle()->attach(2);
+
+        User::factory(50)->create();
+        NFT::factory(100)->create();
+        UserBundle::factory(20)->create();
     }
 }
