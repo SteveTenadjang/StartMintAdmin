@@ -31,7 +31,6 @@ Route::group(['middleware' => 'auth:sanctum'], static function () {
     Route::put('user',[UserController::class,'update']);
     Route::delete('user',[UserController::class,'delete']);
     Route::get('users',[UserController::class,'index']);
-    Route::post('logout',[AuthController::class,'logout']);
 //    Route::apiResource('user', UserController::class)->only('index','store','delete');
 //    Route::group(['middleware' => 'verified'], static function () {
 //    });
