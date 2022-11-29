@@ -62,7 +62,7 @@ class BundleController extends Controller
         { return (new Response)->idNotFound(); }
 
         return (!$user->update($request->validated()))
-            ? (new Response)->error(400)
+            ? (new Response)->error()
             : (new Response)->success(BundleResource::make($user));
     }
 
@@ -79,7 +79,7 @@ class BundleController extends Controller
         { return (new Response)->idNotFound(); }
 
         return (!$user->delete())
-            ? (new Response)->error(400,$user)
+            ? (new Response)->error()
             : (new Response)->success(BundleResource::make($user));
     }
 }

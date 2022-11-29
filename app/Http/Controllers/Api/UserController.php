@@ -61,7 +61,7 @@ class UserController extends Controller
         { return (new Response)->idNotFound(); }
 
         if(!$user->update($request->validated()))
-        { return (new Response)->error(400);}
+        { return (new Response)->error();}
 
         if($request->has('bundle_id'))
         { $user->bundle()->sync([$user->bundle()->first()['id'] => ['status' => false], $request->input('bundle_id')]); }
@@ -81,7 +81,7 @@ class UserController extends Controller
         { return (new Response)->idNotFound(); }
 
         return (!$user->delete())
-            ? (new Response)->error(400,$user)
+            ? (new Response)->error()
             : (new Response)->success(UserResource::make($user));
     }
 }

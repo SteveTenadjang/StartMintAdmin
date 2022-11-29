@@ -69,7 +69,7 @@ class NFTController extends Controller
         { return (new Response)->idNotFound(); }
         $nft = $this->fileManager($request, $nft);
         return (!$nft->update($request->validated()))
-            ? (new Response)->error(400)
+            ? (new Response)->error()
             : (new Response)->success(NFTResource::make($nft));
     }
 

@@ -77,7 +77,7 @@ class Response{
         ];
     }
 
-    public function error($statusCode = 500, $data = null,$message = null): array
+    public function error($statusCode = 400, $data = null,$message = null): array
     {
         Log::channel()->error(Route::getCurrentRoute()?->getActionName()." failed, an error occurred");
         return [

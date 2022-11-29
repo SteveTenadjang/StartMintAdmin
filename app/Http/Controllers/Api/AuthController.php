@@ -49,4 +49,12 @@ class AuthController extends Controller
         auth()->user()?->tokens()->delete();
         return (new Response)->success(['user'=>null]);
     }
+
+    public function forgotPassword(Request $request): array
+    {
+        $user = User::query()->where('email', $request->input('email'))->first();
+        if(!$user)
+        { return (new Response)->error(statusCode: 404, message: 'Unknown Email'); }
+        return (new Response)->success($user);
+    }
 }
