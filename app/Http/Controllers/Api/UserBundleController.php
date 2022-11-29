@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\UserBundleRequest;
 use App\Http\Resources\UserBundleResource;
 use App\Models\UserBundle;
-use App\Traits\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserBundleController extends Controller
@@ -14,37 +14,37 @@ class UserBundleController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function index(Request $request): array
-    {  return (new Response)->success(UserBundleResource::collection(UserBundle::all())); }
+    public function index(Request $request): JsonResponse
+    {  return response()->success(UserBundleResource::collection(UserBundle::all())); }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param UserBundleRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function store(UserBundleRequest $request): array
+    public function store(UserBundleRequest $request): JsonResponse
     {
         $user = new UserBundle($request->validated());
         return !$user->save()
-            ? (new Response)->error()
-            : (new Response)->created(UserBundleResource::make($user));
+            ? response()->error()
+            : response()->created(UserBundleResource::make($user));
     }
 
     /**
      * Display the specified resource and it's relations.
      *
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function show(int $id): array
+    public function show(int $id): JsonResponse
     {
         $user = UserBundle::query()->find($id);
         return !$user
-            ? (new Response)->idNotFound()
-            : (new Response)->success(UserBundleResource::make($user));
+            ? response()->idNotFound()
+            : response()->success(UserBundleResource::make($user));
     }
 
     /**
@@ -53,33 +53,33 @@ class UserBundleController extends Controller
      *
      * @param UserBundleRequest $request
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function update(UserBundleRequest $request, int $id): array
+    public function update(UserBundleRequest $request, int $id): JsonResponse
     {
         $user = UserBundle::query()->find($id);
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         return (!$user->update($request->validated()))
-            ? (new Response)->error()
-            : (new Response)->success(UserBundleResource::make($user));
+            ? response()->error()
+            : response()->success(UserBundleResource::make($user));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function destroy(int $id): array
+    public function destroy(int $id): JsonResponse
     {
         $user = UserBundle::query()->find($id);
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         return (!$user->delete())
-            ? (new Response)->error()
-            : (new Response)->success(UserBundleResource::make($user));
+            ? response()->error()
+            : response()->success(UserBundleResource::make($user));
     }
 }

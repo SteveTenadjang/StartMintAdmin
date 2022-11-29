@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\NFTRequest;
 use App\Http\Resources\NFTResource;
 use App\Models\NFT;
-use App\Traits\Response;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NFTController extends Controller
@@ -17,41 +17,41 @@ class NFTController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function index(Request $request): array
-    {  return (new Response)->success(NFTResource::collection(NFT::all())); }
+    public function index(Request $request): JsonResponse
+    {  return response()->success((NFTResource::collection(NFT::all()))); }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param NFTRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function store(NFTRequest $request): array
+    public function store(NFTRequest $request): JsonResponse
     {
         $nft = new NFT($request->validated());
         $nft['created_by'] = auth()->id();
         if(!auth()->user()?->canCreate())
-        { return (new Response)->error(401,$nft, "already exceeded creation limit"); }
+        { return response()->error(401,$nft, "already exceeded creation limit"); }
         $nft = $this->fileManager($request, $nft);
         return !$nft->save()
-            ? (new Response)->error()
-            : (new Response)->created(NFTResource::make($nft));
+            ? response()->error()
+            : response()->created(NFTResource::make($nft));
     }
 
     /**
      * Display the specified resource and it's relations.
      *
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function show(int $id): array
+    public function show(int $id): JsonResponse
     {
         $nft = NFT::query()->find($id);
         return !$nft
-            ? (new Response)->idNotFound()
-            : (new Response)->success(NFTResource::make($nft));
+            ? response()->idNotFound()
+            : response()->success(NFTResource::make($nft));
     }
 
     /**
@@ -60,17 +60,17 @@ class NFTController extends Controller
      *
      * @param NFTRequest $request
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function update(NFTRequest $request, int $id): array
+    public function update(NFTRequest $request, int $id): JsonResponse
     {
         $nft = NFT::query()->find($id);
         if(!$nft)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
         $nft = $this->fileManager($request, $nft);
         return (!$nft->update($request->validated()))
-            ? (new Response)->error()
-            : (new Response)->success(NFTResource::make($nft));
+            ? response()->error()
+            : response()->success(NFTResource::make($nft));
     }
 
     /**
@@ -79,15 +79,15 @@ class NFTController extends Controller
      * @param int $id
      * @return array
      */
-    public function destroy(int $id): array
+    public function destroy(int $id): JsonResponse
     {
         $nft = NFT::query()->find($id);
         if(!$nft)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         return (!$nft->delete())
-            ? (new Response)->error(400,$nft)
-            : (new Response)->success(NFTResource::make($nft));
+            ? response()->error(400,$nft)
+            : response()->success(NFTResource::make($nft));
     }
 
     /**
@@ -102,7 +102,7 @@ class NFTController extends Controller
             $extensions = ['mp4', 'mov', 'gif', 'jpg', 'png', 'pdf', 'ai', 'eps', 'mp3', 'wav', 'aiff'];
             $extension = $file->getClientOriginalExtension();
             if (in_array($extension, $extensions)) {
-                $nft['media_link'] = $file->storeAs('files/' . time(), $name);
+                $nft['media_link'] = $file->storeAs('files/' . time(), $request->input('media_title'));
                 $nft['media_type'] = $extension;
             }
         }

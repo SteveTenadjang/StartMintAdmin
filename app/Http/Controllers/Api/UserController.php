@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Traits\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -15,36 +15,36 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function index(Request $request): array
-    {  return (new Response)->success(UserResource::collection(User::all())); }
+    public function index(Request $request): JsonResponse
+    {  return response()->success(UserResource::collection(User::all())); }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param UserRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function store(UserRequest $request): array
+    public function store(UserRequest $request): JsonResponse
     {
         $user = new User($request->validated());
         if(!$user->save())
-        { return (new Response)->error(); }
+        { return response()->error(); }
         $user->bundle()->attach($request->input('bundle_id')?:1);
-        return (new Response)->created(UserResource::make($user));
+        return response()->created(UserResource::make($user));
     }
 
     /**
      * Display the specified resource and it's relations.
      *
-     * @return array
+     * @return JsonResponse
      */
-    public function show(): array
+    public function show(): JsonResponse
     {
         return (!auth()->user())
-            ? (new Response)->idNotFound()
-            : (new Response)->success(UserResource::make(auth()->user()));
+            ? response()->idNotFound()
+            : response()->success(UserResource::make(auth()->user()));
     }
 
     /**
@@ -52,36 +52,36 @@ class UserController extends Controller
      * EC = User Collection name for Spatie media
      *
      * @param UserRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function update(UserRequest $request): array
+    public function update(UserRequest $request): JsonResponse
     {
         $user = auth()->user();
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         if(!$user->update($request->validated()))
-        { return (new Response)->error();}
+        { return response()->error();}
 
         if($request->has('bundle_id'))
         { $user->bundle()->sync([$user->bundle()->first()['id'] => ['status' => false], $request->input('bundle_id')]); }
-        return (new Response)->success(UserResource::make($user));
+        return response()->success(UserResource::make($user));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function destroy(int $id): array
+    public function destroy(int $id): JsonResponse
     {
         $user = User::query()->find($id);
         if(!$user)
-        { return (new Response)->idNotFound(); }
+        { return response()->idNotFound(); }
 
         return (!$user->delete())
-            ? (new Response)->error()
-            : (new Response)->success(UserResource::make($user));
+            ? response()->error()
+            : response()->success(UserResource::make($user));
     }
 }

@@ -5,7 +5,7 @@ namespace App\Traits;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-class Response{
+class ApiResponse{
     public function auth($data,$token): array
     {
         Log::channel()->info(Route::getCurrentRoute()?->getActionName()." method success");
