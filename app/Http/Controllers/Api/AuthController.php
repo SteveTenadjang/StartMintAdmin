@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -22,7 +23,8 @@ class AuthController extends Controller
     {
         $user = new User($request->validated());
 		$user['password'] = Hash::make($request['password']);
-        $user->save();
+        if(!$user->save())
+        { return response()->error(); }
         $token = $user->createToken('auth_token')->plainTextToken;
         $user->bundle()->attach($request->input('bundle_id')?:1);
         return response()->auth(UserResource::make($user),$token);
@@ -55,6 +57,17 @@ class AuthController extends Controller
         $user = User::query()->where('email', $request->input('email'))->first();
         if(!$user)
         { return response()->error(message: 'Unknown Email'); }
+        return response()->success($user);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $user = User::query()->where('email', $request->input('email'))->first();
+        if(!$user)
+        { return response()->error(message: 'Unknown Email'); }
+        $user['password'] = Hash::make($request->input('password'));
+        if(!$user->save())
+        { return response()->error(); }
         return response()->success($user);
     }
 }
