@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,18 +15,18 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function index(Request $request): array
+    public function index(Request $request): JsonResponse
     {  return response()->success(UserResource::collection(User::all())); }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param UserRequest $request
-     * @return array
+     * @return JsonResponse
      */
-    public function store(UserRequest $request): array
+    public function store(UserRequest $request): JsonResponse
     {
         $user = new User($request->validated());
         if(!$user->save())
@@ -37,12 +38,11 @@ class UserController extends Controller
     /**
      * Display the specified resource and it's relations.
      *
-     * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function show(int $id): array
+    public function show(): JsonResponse
     {
-        $user = User::query()->find($id);
+        $user = auth()->user();
         return (!$user)
             ? response()->idNotFound()
             : response()->success(UserResource::make($user));
@@ -53,12 +53,11 @@ class UserController extends Controller
      * EC = User Collection name for Spatie media
      *
      * @param UserRequest $request
-     * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function update(UserRequest $request, int $id): array
+    public function update(UserRequest $request): JsonResponse
     {
-        $user = User::query()->find($id);
+        $user = $request->user();
         if(!$user)
         { return response()->idNotFound(); }
 
@@ -73,9 +72,9 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return array
+     * @return JsonResponse
      */
-    public function destroy(int $id): array
+    public function destroy(int $id): JsonResponse
     {
         $user = User::query()->find($id);
         if(!$user)
