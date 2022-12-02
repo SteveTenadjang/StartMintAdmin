@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                     'success' => true,
                     'data' => $data,
                     'access_token' => $token
-                ], 201);
+                ]);
             });
 
         Response::macro('created',
@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                 return response()->json([
                     'success' => true,
                     'message' => $message
-                ], 201);
+                ]);
             });
 
         Response::macro('success',
